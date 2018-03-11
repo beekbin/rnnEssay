@@ -1,8 +1,6 @@
 set terminal svg font "Bitstream Vera Sans,18" size 600,400
 set output "compare.svg"
 
-#set term postscript eps enhanced color 
-#set output "sigmoid.eps"
 
 #set key off
 #set key left top
