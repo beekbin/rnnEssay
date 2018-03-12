@@ -1,9 +1,10 @@
 % Preamble
 % ---
-\documentclass{article}
+\documentclass[english]{article}
 
 % Packages
 % ---
+\usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage{amsmath} % Advanced math typesetting
 \usepackage{bm} %bold math
 \usepackage{empheq} % Math left brace
@@ -16,16 +17,26 @@
 \graphicspath{ {img/} }
 \usepackage[figurename=Figure]{caption}
 \usepackage{url}
-\usepackage[a4paper, total={6in, 8in}]{geometry}
+%\usepackage{biblatex}
+%\addbibresource{bib.bib}
 
 
 \begin{document}
+\selectlanguage{english}
 
-\author{Songbin Liu \\\\ apple.songbin@gmail.com} % The authors name
+
+\author{Songbin Liu \\\\ songbinliu@hotmail.com} % The authors name
 %\email{}
 \title{BPTT for RNN and LSTM} % The title of the document
 \date{March 4th, 2018} % Sets date you can remove \today{} and type a date manually
 \maketitle{} % Generates title
+
+\begin{abstract}
+The training process of RNN/LSTM is not easy to be comprehended. This essay presents a easy way to understand this process.
+Firstly, it will explain the BPTT process when training RNN, and the gradient vanishing problem of RNN.  Secondly, it will explain the BPTT
+process for LSTM, and how LSTM can handle the gradient vanishing problem better.
+
+\end{abstract}
 
 \section{Introduction}
 Recurrent Neural Networks (RNN), especially its variants, such as Long Short Term Memory networks (LSTM) and GRU,
@@ -41,9 +52,10 @@ In this documentation, Section-\ref{sec:rnn} describes the training process of v
 in addition, the gradient vanishing and exploding problem of vanilla RNN is also explained.  Section-\ref{sec:rnn} describes how to
 train the LSTM with math explanation too, and points out how LSTM overcomes the drawback of vanilla RNN.
 
-Note: Because of my humble mathematical background, I will try to explain RNN/LSTM in an intuitive fashion, emphasizing concepts rather than mathematical details.
+Note: Because of my humble mathematical background, I will try to explain RNN/LSTM in an intuitive fashion, emphasizing concepts rather than 
+mathematical details. In fact, after labeling the layers the unfolded RNN/LSTM properly, the training process is almost the same as training an
+ordinary multi-layer feed-forward neural networks.
 
-%In this wiki, the Backpropagation Through Time (BPTT) process is explained for training RNN and LSTM. 
 
 \section{training RNN with BPTT} \label{sec:rnn}
 In this section, the structure of the vanilla RNN is recapped first; second, the process of BPTT to
@@ -58,6 +70,7 @@ Figure-\ref{fig:vanillaRNN} shows the structure of a vanilla RNN.
 	\caption{Vanilla RNN}
 	\label{fig:vanillaRNN}
 \end{figure}
+
 \begin{align}
 h^{(t)} &= \tanh(Ux^{(t)} + Wh^{(t-1)})\\
 y^{(t)} &= softmax(Vh^{(t)})
@@ -238,15 +251,11 @@ h^{(t)} &= o^{(t)} \cdot \tanh(C^{(t)})\\
 y^{(t)} &= softmax(V \cdot h^{(t)})
 \end{empheq}
 
-\textbf{Firstly}, calculate the input gate(Equation-\ref{eq:input-gate}) and the input value(Equation-\ref{eq:input-value});
+\textbf{Firstly},update the cell state(Equation-\ref{eq:update-cell}) with the input gate(Equation-\ref{eq:input-gate}), 
+input value(Equation-\ref{eq:input-value}), forget gate(Equation-\ref{eq:forget-gate}), and previous cell state;
 
-\textbf{Secondly}, calculate the forget gate(Equation-\ref{eq:forget-gate});
 
-\textbf{Thirdly}, update the cell state(Equation-\ref{eq:update-cell}) with the input gate, input value, forget gate, and previous cell state;
-
-\textbf{Fourthly}, calculate the output gate(Equation-\ref{eq:output-gate});
-
-\textbf{Fifthly}, update hidden state with the new cell state and output gate(Equation-\ref{eq:update-hidden});
+\textbf{Secondly}, update hidden state(Equation-\ref{eq:update-hidden}) with the new cell state and output gate(Equation-\ref{eq:output-gate});
 
 \textbf{Lastly}, calculate the output based on the new hidden state(Equation-\ref{eq:output});
 
@@ -423,6 +432,11 @@ longer memory for previous inputs.
 	\label{fig:compare}
 \end{figure}
 
+\section{Implementation}
+A prototype of RNN layer has been implemented in my github (\textbf{https://github.com/beekbin/simpleRNN}). 
+In this implementation, to be able to be stacked by other sequence layer (for example, another RNN layer, or Pooling layer), the output of the RNN
+layer is $Vh^{(t)}$, instead of $softmax(Vh^{(t)})$.  The $Softmax$ is implemented as a separate layer.
+
 
 \section{Conclusion}
 This essay has explained:
@@ -432,5 +446,10 @@ This essay has explained:
   \item The gradient vanishing problem of RNN;
   \item How LSTM handles the gradient vanishing problem better than RNN.
  \end{itemize}
+
+%\bibliographystyle{unsrt}
+%\bibliography{bib}
+
+
 
 \end{document}
