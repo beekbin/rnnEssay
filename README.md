@@ -1,4 +1,4 @@
-# rnnEssay
+# An Essay about RNN/LSTM
 This essay is about how to implement RNN/LSTM:
 
 * How to train a vanilla RNN
