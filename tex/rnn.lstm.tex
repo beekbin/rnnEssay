@@ -17,8 +17,6 @@
 \graphicspath{ {img/} }
 \usepackage[figurename=Figure]{caption}
 \usepackage{url}
-%\usepackage{biblatex}
-%\addbibresource{bib.bib}
 
 
 \begin{document}
@@ -39,26 +37,33 @@ process for LSTM, and how LSTM can handle the gradient vanishing problem better.
 \end{abstract}
 
 \section{Introduction}
-Recurrent Neural Networks (RNN), especially its variants, such as Long Short Term Memory networks (LSTM) and GRU,
+Recurrent Neural Networks (RNN), especially its variants, such as Long Short Term Memory networks (LSTM\cite{LSTM1997}) and GRU\cite{gru2014},
 are powerful neural network models. With today's more advanced computation resources, larger volumes of training data,
-and better optimization techniques, these models are proved very effective to solve application problems.  There are many
+and better optimization techniques(\cite{dropout2014, norm2015, adaptive2016}), 
+these models are proved very effective to solve application problems.  There are many
 platforms/tools have implemented them, and make them handy for use.
 
 However, it is still useful to understand these models' internal math dynamic process, and how they can be implemented, so that
 we can take better use of these models: choose the right model for the application problem, prepare the training data well, and know how to
 tune the hyper-parameters.
 
-In this documentation, Section-\ref{sec:rnn} describes the training process of vanilla RNN with some math explanation; 
+In this essay, Section-\ref{sec:rnn} describes the training process of vanilla RNN with some math explanation; 
 in addition, the gradient vanishing and exploding problem of vanilla RNN is also explained.  Section-\ref{sec:rnn} describes how to
-train the LSTM with math explanation too, and points out how LSTM overcomes the drawback of vanilla RNN.
+train the LSTM with math explanation too, and points out how LSTM overcomes the drawback of vanilla RNN. 
+In fact, the gradient vanishing problem for RNN, and how LSTM handles this problem has already been explained in 1997\cite{LSTM1997}. 
+However, this essay is trying to explain it in a more intuitive way: explain them with more details from example.
 
-Note: Because of my humble mathematical background, I will try to explain RNN/LSTM in an intuitive fashion, emphasizing concepts rather than 
-mathematical details. In fact, after labeling the layers the unfolded RNN/LSTM properly, the training process is almost the same as training an
-ordinary multi-layer feed-forward neural networks.
+
+
+Note: I will try to explain RNN/LSTM in an intuitive fashion, emphasizing concepts rather than 
+mathematical details. As we will seen in this essay, 
+after labeling the layers the unfolded RNN/LSTM properly, the training process is almost the same as training the ordinary 
+multi-layer feed-forward neural networks.
 
 
 \section{training RNN with BPTT} \label{sec:rnn}
-In this section, the structure of the vanilla RNN is recapped first; second, the process of BPTT to
+In this section, the structure of the vanilla RNN is recapped first; second, the process of 
+\textit{Backpropagation Through Time (BPTT)}\cite{BPTT1995} to
 train this RNN is demonstrated via a simplified example; third, the difficulty of training this vanilla RNN
 is explained through an example.
 
@@ -81,7 +86,8 @@ but also depends on previous hidden state  $h^{(t-1)}$ .
 The training process will try to learn the parameters: $U$, $W$, and $V$ (and also bias $b$, which is not shown).
 
 \subsection{Training RNN with BPTT}\label{sec:train-rnn}
-RNN is trained with the \textit{Backpropagation Through Time (BPTT)} method, which is a variant of the normal \textit{Backpropagation} method for  feed-forward neural networks. When trained with the BPTT method, for each input sequence, RNN is unfolded into a (deep) feed-forward neural network in time dimension (as shown in \ref{fig:vanillaRNN}), the gradients of parameters $U$, $W$ and $V$ are calculated at each layer. 
+RNN is trained with the \textit{BPTT} method, which is a variant of the normal 
+\textit{Backpropagation} method for  feed-forward neural networks. When trained with the BPTT method, for each input sequence, RNN is unfolded into a (deep) feed-forward neural network in time dimension (as shown in \ref{fig:vanillaRNN}), the gradients of parameters $U$, $W$ and $V$ are calculated at each layer. 
 There are two main differences from the normal \textit{Backpropagation}:  \par
  \textbf{First}, since the parameters $U$, $W$ and $V$ are shared across the steps/layers, these parameters are updated by the sum of the gradients in each step, like the how the shared parameters are updated in Convolutional neural network(CNN). \par
  \textbf{Second}, usually there is an output at each timestep,  so there is one training example at each time step.
@@ -231,7 +237,8 @@ It has a cell state, and a hidden state, three gates: forget gates, input gates,
 
 \subsection{Structure of LSTM}
 Define $x^{(t)}$ is the input of timestep $t$, $C^{(t)}$ is the cell state, $h^{(t)}$ is the hidden state,  $y^{(t)}$ is the output.
-The forward process to update these values is shown in Equations-\ref{eq:input-gate}--\ref{eq:output}.
+The forward process to update these values is shown in Equations-\ref{eq:input-gate}--\ref{eq:output}.  Read the wonderful blog about
+the structure of LSTM\cite{intro-rnn} if Equations-\ref{eq:input-gate}--\ref{eq:output} are not clear.
 
 
 \begin{empheq}[left=\empheqlbrace]{align}
@@ -447,9 +454,9 @@ This essay has explained:
   \item How LSTM handles the gradient vanishing problem better than RNN.
  \end{itemize}
 
-%\bibliographystyle{unsrt}
-%\bibliography{bib}
 
+\bibliographystyle{ieeetr}
+\bibliography{rnn.ref}
 
 
 \end{document}
